@@ -83,7 +83,7 @@
     });
     const sel = $("#langSelect");
     if (sel && sel.value !== state.lang) sel.value = state.lang;
-    document.title = "LottoLab Global — " + t("games." + state.gameId + ".name");
+    document.title = "LottoLab Global: " + t("games." + state.gameId + ".name");
   }
 
   function setLang(lang, silent) {

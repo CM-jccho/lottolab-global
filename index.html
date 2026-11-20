@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>LottoLab Global — 복권 통계 분석 · 번호 연구소</title>
-<meta name="description" content="한국 로또 6/45, 미국 Powerball, 일본 로토6, 유로밀리언즈의 실제 공개 회차 데이터를 분석하는 통계 참고 도구. 과거 통계는 당첨을 예측하지 않습니다.">
+<title>LottoLab Global: 복권 통계 분석, 번호 연구소</title>
+<meta name="description" content="한국 로또 6/45, 미국 Powerball, 일본 로토6, 유로밀리언즈의 실제 공개 회차 데이터를 분석하는 통계 참고 도구입니다. 과거 통계는 당첨을 예측하지 않습니다.">
 <meta name="theme-color" content="#0b0f1a">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='%23ffd166'/%3E%3Ccircle cx='32' cy='32' r='28' fill='none' stroke='%230b0f1a' stroke-width='4'/%3E%3Ctext x='32' y='42' font-size='28' text-anchor='middle' font-family='sans-serif' font-weight='700' fill='%230b0f1a'%3E6%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="css/styles.css">
@@ -13,7 +13,7 @@
 
 <header class="topbar">
   <a class="brand" href="#top" aria-label="LottoLab Global">
-    <span class="brand-mark" aria-hidden="true">◍</span>
+    <span class="brand-mark" aria-hidden="true"></span>
     <span class="brand-name">LottoLab<em>Global</em></span>
   </a>
 
@@ -51,7 +51,6 @@
 </header>
 
 <div class="disclaimer-bar" role="note">
-  <span class="disclaimer-icon" aria-hidden="true">⚠️</span>
   <span data-i18n="footer.disclaimer">과거 공개 추첨 통계 참고 도구이며, 당첨을 예측하거나 보장하지 않습니다.</span>
 </div>
 
@@ -59,25 +58,24 @@
   <!-- ── hero ─────────────────────────────────────────────── -->
   <section class="hero">
     <div class="hero-copy">
-      <div class="hero-eyebrow">
-        <span class="hero-flag" id="heroFlag">🇷</span>
-        <span id="heroCountry">대한민국</span>
-        <span class="dot-sep">·</span>
-        <span id="heroRule">1~45 중 6개 + 보너스</span>
-      </div>
       <h1 class="hero-title" id="heroTitle">로또 6/45</h1>
       <p class="hero-desc" id="heroDesc"></p>
-      <div class="hero-meta">
-        <span class="meta-pill"><span class="meta-k" data-i18n="hero.nextDraw">다음 추첨</span><strong id="heroNextDraw">-</strong></span>
-        <span class="meta-pill"><span class="meta-k" data-i18n="hero.price">1게임 가격</span><strong id="heroPrice">-</strong></span>
-        <span class="meta-pill"><span class="meta-k" data-i18n="hero.odds">1등 확률</span><strong id="heroOdds">-</strong></span>
-      </div>
+      <p class="hero-rule">
+        <span class="hero-flag" id="heroFlag" aria-hidden="true"></span>
+        <span id="heroCountry">대한민국</span>
+        <span id="heroRule">1~45 중 6개 + 보너스</span>
+      </p>
+      <dl class="hero-meta">
+        <div><dt class="meta-k" data-i18n="hero.nextDraw">다음 추첨</dt><dd><strong id="heroNextDraw">-</strong></dd></div>
+        <div><dt class="meta-k" data-i18n="hero.price">1게임 가격</dt><dd><strong id="heroPrice">-</strong></dd></div>
+        <div><dt class="meta-k" data-i18n="hero.odds">1등 확률</dt><dd><strong id="heroOdds">-</strong></dd></div>
+      </dl>
     </div>
 
     <aside class="data-card">
       <div class="data-card-head">
         <h2 data-i18n="hero.dataTitle">내장 데이터</h2>
-        <span class="live-badge" id="dataBadge"><span class="live-dot"></span><span data-i18n="hero.dataLive">실제 회차</span></span>
+        <span class="live-badge" id="dataBadge"><span data-i18n="hero.dataLive">실제 회차</span></span>
       </div>
       <dl class="data-list">
         <div><dt data-i18n="hero.dataRange">수집 회차</dt><dd id="dataRange">-</dd></div>
@@ -92,16 +90,16 @@
   <!-- ── tabs ─────────────────────────────────────────────── -->
   <nav class="tabs" role="tablist" aria-label="Sections">
     <button class="tab is-active" role="tab" aria-selected="true" data-tab="stats" type="button">
-      <span class="tab-ico" aria-hidden="true">📊</span><span data-i18n="nav.stats">통계</span>
+      <span data-i18n="nav.stats">통계</span>
     </button>
     <button class="tab" role="tab" aria-selected="false" data-tab="generate" type="button">
-      <span class="tab-ico" aria-hidden="true">🎟️</span><span data-i18n="nav.generate">번호 추천</span>
+      <span data-i18n="nav.generate">번호 추천</span>
     </button>
     <button class="tab" role="tab" aria-selected="false" data-tab="pro" type="button">
-      <span class="tab-ico" aria-hidden="true">🎛️</span><span data-i18n="nav.pro">정밀 필터</span><span class="tab-lock" data-lock-mark>🔒</span>
+      <span data-i18n="nav.pro">정밀 필터</span><span class="tab-lock" data-lock-mark data-i18n="common.pro">Pro</span>
     </button>
     <button class="tab" role="tab" aria-selected="false" data-tab="backtest" type="button">
-      <span class="tab-ico" aria-hidden="true">🧪</span><span data-i18n="nav.backtest">백테스트</span><span class="tab-lock" data-lock-mark>🔒</span>
+      <span data-i18n="nav.backtest">백테스트</span><span class="tab-lock" data-lock-mark data-i18n="common.pro">Pro</span>
     </button>
   </nav>
 
@@ -151,14 +149,14 @@
     <div class="two-col">
       <div class="card">
         <div class="card-head">
-          <h3><span class="flame">🔥</span> <span data-i18n="stats.hotTitle">HOT 10</span></h3>
+          <h3><span data-i18n="stats.hotTitle">상위 10</span></h3>
           <span class="card-sub" data-i18n="stats.hotSub">가장 많이 나온 번호</span>
         </div>
         <ol class="rank-list" id="hotList"></ol>
       </div>
       <div class="card">
         <div class="card-head">
-          <h3><span class="ice">🧊</span> <span data-i18n="stats.coldTitle">COLD 10</span></h3>
+          <h3><span data-i18n="stats.coldTitle">하위 10</span></h3>
           <span class="card-sub" data-i18n="stats.coldSub">가장 적게 나온 번호</span>
         </div>
         <ol class="rank-list" id="coldList"></ol>
@@ -167,7 +165,7 @@
 
     <div class="card">
       <div class="card-head">
-        <h3 data-i18n="stats.overdueTitle">오버듀 — 최근 미출현 순위</h3>
+        <h3 data-i18n="stats.overdueTitle">오버듀: 최근 미출현 순위</h3>
         <span class="card-sub" data-i18n="stats.overdueSub">마지막 출현 이후 지난 회차</span>
       </div>
       <div class="overdue-grid" id="overdueList"></div>
@@ -226,12 +224,10 @@
       </div>
       <div class="free-actions">
         <button class="btn btn-primary btn-lg" id="btnFreeGenerate" type="button">
-          <span aria-hidden="true">🎲</span>
           <span data-i18n="gen.freeButton">기본 추천 받기 (2게임)</span>
         </button>
         <button class="btn btn-ghost" id="btnProTen" type="button" data-open-modal>
-          <span aria-hidden="true">🔒</span>
-          <span data-i18n="gen.proTen">PRO · 10게임 일괄 + CSV</span>
+          <span data-i18n="gen.proTen">Pro 10게임 일괄 + CSV</span>
         </button>
       </div>
       <p class="hint" data-i18n="gen.freeHint">무료 추천은 하루 1회, 2게임까지 제공됩니다.</p>
@@ -261,14 +257,13 @@
   <!-- ── pro filters ──────────────────────────────────────── -->
   <section class="panel" id="panel-pro" role="tabpanel">
     <div class="panel-head">
-      <h2><span data-i18n="pro.title">정밀 조건 필터</span> <span class="badge-pro">PRO</span></h2>
+      <div class="panel-head-row"><h2><span data-i18n="pro.title">정밀 조건 필터</span></h2><span class="badge-pro" data-i18n="common.pro">Pro</span></div>
       <p data-i18n="pro.desc">핫/콜드 가중치, 홀짝, 총합 구간, 연속수, 고정수·제외수를 조합해 조건에 맞는 조합만 생성합니다.</p>
     </div>
 
     <div class="pro-gated" id="proGateWrap">
       <div class="gate" id="proGate" hidden>
         <div class="gate-card">
-          <span class="gate-icon" aria-hidden="true">🔒</span>
           <h3 data-i18n="pro.lockTitle">PRO 기능입니다</h3>
           <p data-i18n="pro.lockDesc">정밀 필터와 백테스트는 라이선스 코드로 해금됩니다.</p>
           <button class="btn btn-primary" type="button" data-open-modal data-i18n="common.unlockPro">PRO 해금하기</button>
@@ -344,7 +339,7 @@
           </select>
         </label>
         <button class="btn btn-primary btn-lg" id="btnProGenerate" type="button">
-          <span aria-hidden="true">⚙️</span><span data-i18n="pro.run">조건으로 번호 생성</span>
+          <span data-i18n="pro.run">조건으로 번호 생성</span>
         </button>
         <button class="btn btn-ghost" id="btnResetFilters" type="button" data-i18n="pro.reset">조건 초기화</button>
       </div>
@@ -367,14 +362,13 @@
   <!-- ── backtest ─────────────────────────────────────────── -->
   <section class="panel" id="panel-backtest" role="tabpanel">
     <div class="panel-head">
-      <h2><span data-i18n="bt.title">과거 회차 백테스트</span> <span class="badge-pro">PRO</span></h2>
+      <div class="panel-head-row"><h2><span data-i18n="bt.title">과거 회차 백테스트</span></h2><span class="badge-pro" data-i18n="common.pro">Pro</span></div>
       <p data-i18n="bt.desc">현재 필터 조건으로 과거 회차를 하나씩 재현해 적중 분포를 계산합니다. 각 회차는 그 시점 이전 데이터만 사용합니다(워크포워드).</p>
     </div>
 
     <div class="pro-gated" id="btGateWrap">
       <div class="gate" id="btGate" hidden>
         <div class="gate-card">
-          <span class="gate-icon" aria-hidden="true">🔒</span>
           <h3 data-i18n="bt.lockTitle">PRO 기능입니다</h3>
           <p data-i18n="bt.lockDesc">과거 전체 회차 시뮬레이션은 라이선스 해금 후 사용할 수 있습니다.</p>
           <button class="btn btn-primary" type="button" data-open-modal data-i18n="common.unlockPro">PRO 해금하기</button>
@@ -397,7 +391,7 @@
           </select>
         </div>
         <button class="btn btn-primary" id="btnBacktest" type="button">
-          <span aria-hidden="true">🧪</span><span data-i18n="bt.run">백테스트 실행</span>
+          <span data-i18n="bt.run">백테스트 실행</span>
         </button>
       </div>
 
@@ -425,7 +419,7 @@
 <footer class="site-footer">
   <div class="footer-top">
     <div class="footer-brand">
-      <span class="brand-mark" aria-hidden="true">◍</span>
+      <span class="brand-mark" aria-hidden="true"></span>
       <span>LottoLab Global</span>
       <span class="footer-ver">v1.0</span>
     </div>
@@ -445,18 +439,16 @@
   <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <button class="modal-close" type="button" data-close-modal aria-label="Close">×</button>
     <div class="modal-body">
-      <span class="modal-icon" aria-hidden="true">🔓</span>
       <h2 id="modalTitle" data-i18n="modal.title">PRO 잠금 해제</h2>
       <p class="modal-sub" data-i18n="modal.subtitle">정밀 필터·백테스트·10게임 일괄 생성을 모두 사용할 수 있습니다.</p>
 
       <ul class="modal-features">
-        <li><span aria-hidden="true">🎛️</span><span data-i18n="modal.f1">핫/콜드 가중치·홀짝·총합·연속수·고정수/제외수 필터</span></li>
-        <li><span aria-hidden="true">🧪</span><span data-i18n="modal.f2">과거 회차 전체 백테스트 시뮬레이터</span></li>
-        <li><span aria-hidden="true">📄</span><span data-i18n="modal.f3">10게임 일괄 생성 + CSV 내보내기</span></li>
+        <li><span data-i18n="modal.f1">핫·콜드 가중치, 홀짝, 총합, 연속수, 고정수와 제외수 필터</span></li>
+        <li><span data-i18n="modal.f2">과거 회차 전체 백테스트 시뮬레이터</span></li>
+        <li><span data-i18n="modal.f3">10게임 일괄 생성 + CSV 내보내기</span></li>
       </ul>
 
       <a class="btn btn-buy" id="buyBtn" href="#" target="_blank" rel="noopener">
-        <span aria-hidden="true">🛒</span>
         <span data-i18n="modal.buy">래피드에서 PRO 구매</span>
       </a>
       <p class="modal-buy-note" data-i18n="modal.buyNote">결제 후 발급되는 라이선스 코드를 아래에 입력하세요.</p>
