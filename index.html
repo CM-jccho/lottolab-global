@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LottoLab Global — 복권 통계 분석 · 번호 연구소</title>
+<meta name="description" content="한국 로또 6/45, 미국 Powerball, 일본 로토6, 유로밀리언즈의 실제 공개 회차 데이터를 분석하는 통계 참고 도구. 과거 통계는 당첨을 예측하지 않습니다.">
+<meta name="theme-color" content="#0b0f1a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='28' fill='%23ffd166'/%3E%3Ccircle cx='32' cy='32' r='28' fill='none' stroke='%230b0f1a' stroke-width='4'/%3E%3Ctext x='32' y='42' font-size='28' text-anchor='middle' font-family='sans-serif' font-weight='700' fill='%230b0f1a'%3E6%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-game="kr" data-lang="ko">
+
+<header class="topbar">
+  <a class="brand" href="#top" aria-label="LottoLab Global">
+    <span class="brand-mark" aria-hidden="true">◍</span>
+    <span class="brand-name">LottoLab<em>Global</em></span>
+  </a>
+
+  <div class="topbar-right">
+    <div class="country-switch" role="group" aria-label="Lottery">
+      <button class="country-btn is-active" data-game-switch="kr" type="button">
+        <span class="flag" data-flag="kr"></span><span class="country-label" data-i18n="games.kr.short">로또 6/45</span>
+      </button>
+      <button class="country-btn" data-game-switch="us" type="button">
+        <span class="flag" data-flag="us"></span><span class="country-label" data-i18n="games.us.short">Powerball</span>
+      </button>
+      <button class="country-btn" data-game-switch="jp" type="button">
+        <span class="flag" data-flag="jp"></span><span class="country-label" data-i18n="games.jp.short">로토6</span>
+      </button>
+      <button class="country-btn" data-game-switch="eu" type="button">
+        <span class="flag" data-flag="eu"></span><span class="country-label" data-i18n="games.eu.short">EuroMillions</span>
+      </button>
+    </div>
+
+    <label class="lang-wrap">
+      <span class="visually-hidden" data-i18n="header.languageLabel">언어</span>
+      <select id="langSelect" class="lang-select" aria-label="Language">
+        <option value="ko">한국어</option>
+        <option value="en">English</option>
+        <option value="ja">日本語</option>
+        <option value="zh">中文</option>
+      </select>
+    </label>
+
+    <button class="pro-chip" id="proChip" type="button" data-open-modal>
+      <span class="pro-chip-label" data-i18n="header.freePlan">무료 이용 중</span>
+      <span class="pro-chip-cta" data-i18n="header.upgrade">PRO</span>
+    </button>
+  </div>
+</header>
+
+<div class="disclaimer-bar" role="note">
+  <span class="disclaimer-icon" aria-hidden="true">⚠️</span>
+  <span data-i18n="footer.disclaimer">과거 공개 추첨 통계 참고 도구이며, 당첨을 예측하거나 보장하지 않습니다.</span>
+</div>
+
+<main id="top">
+  <!-- ── hero ─────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-copy">
+      <div class="hero-eyebrow">
+        <span class="hero-flag" id="heroFlag">🇷</span>
+        <span id="heroCountry">대한민국</span>
+        <span class="dot-sep">·</span>
+        <span id="heroRule">1~45 중 6개 + 보너스</span>
+      </div>
+      <h1 class="hero-title" id="heroTitle">로또 6/45</h1>
+      <p class="hero-desc" id="heroDesc"></p>
+      <div class="hero-meta">
+        <span class="meta-pill"><span class="meta-k" data-i18n="hero.nextDraw">다음 추첨</span><strong id="heroNextDraw">-</strong></span>
+        <span class="meta-pill"><span class="meta-k" data-i18n="hero.price">1게임 가격</span><strong id="heroPrice">-</strong></span>
+        <span class="meta-pill"><span class="meta-k" data-i18n="hero.odds">1등 확률</span><strong id="heroOdds">-</strong></span>
+      </div>
+    </div>
+
+    <aside class="data-card">
+      <div class="data-card-head">
+        <h2 data-i18n="hero.dataTitle">내장 데이터</h2>
+        <span class="live-badge" id="dataBadge"><span class="live-dot"></span><span data-i18n="hero.dataLive">실제 회차</span></span>
+      </div>
+      <dl class="data-list">
+        <div><dt data-i18n="hero.dataRange">수집 회차</dt><dd id="dataRange">-</dd></div>
+        <div><dt data-i18n="hero.dataPeriod">기간</dt><dd id="dataPeriod">-</dd></div>
+        <div><dt data-i18n="hero.dataUpdated">데이터 기준일</dt><dd id="dataUpdated">-</dd></div>
+        <div><dt data-i18n="hero.dataSource">출처</dt><dd><a id="dataSource" href="#" target="_blank" rel="noopener">-</a></dd></div>
+      </dl>
+      <p class="data-note" data-i18n="hero.dataNote">공개된 실제 추첨 결과만 내장합니다. 지어낸 회차는 없습니다.</p>
+    </aside>
+  </section>
+
+  <!-- ── tabs ─────────────────────────────────────────────── -->
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button class="tab is-active" role="tab" aria-selected="true" data-tab="stats" type="button">
+      <span class="tab-ico" aria-hidden="true">📊</span><span data-i18n="nav.stats">통계</span>
+    </button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="generate" type="button">
+      <span class="tab-ico" aria-hidden="true">🎟️</span><span data-i18n="nav.generate">번호 추천</span>
+    </button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="pro" type="button">
+      <span class="tab-ico" aria-hidden="true">🎛️</span><span data-i18n="nav.pro">정밀 필터</span><span class="tab-lock" data-lock-mark>🔒</span>
+    </button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="backtest" type="button">
+      <span class="tab-ico" aria-hidden="true">🧪</span><span data-i18n="nav.backtest">백테스트</span><span class="tab-lock" data-lock-mark>🔒</span>
+    </button>
+  </nav>
+
+  <!-- ── stats ────────────────────────────────────────────── -->
+  <section class="panel is-active" id="panel-stats" role="tabpanel">
+    <div class="panel-head">
+      <h2 data-i18n="stats.title">통계 대시보드</h2>
+      <p data-i18n="stats.subtitle">내장된 실제 회차 전체를 계산한 결과입니다. 번호별 빈도·오버듀·분포를 한눈에 봅니다.</p>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi">
+        <span class="kpi-label" data-i18n="stats.kpiDraws">내장 회차</span>
+        <strong class="kpi-value" id="kpiDraws">-</strong>
+        <span class="kpi-sub" id="kpiDrawsSub"></span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label" data-i18n="stats.kpiHot">최다 출현</span>
+        <strong class="kpi-value" id="kpiHot">-</strong>
+        <span class="kpi-sub" id="kpiHotSub"></span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label" data-i18n="stats.kpiCold">최소 출현</span>
+        <strong class="kpi-value" id="kpiCold">-</strong>
+        <span class="kpi-sub" id="kpiColdSub"></span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label" data-i18n="stats.kpiOverdue">최장 미출현</span>
+        <strong class="kpi-value" id="kpiOverdue">-</strong>
+        <span class="kpi-sub" id="kpiOverdueSub"></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h3 data-i18n="stats.freqTitle">번호별 출현 빈도</h3>
+        <span class="card-sub" id="freqSub"></span>
+      </div>
+      <div class="chart-scroll"><div id="freqChart" class="freq-chart"></div></div>
+      <div class="legend">
+        <span class="legend-item"><i class="lg lg-hot"></i><span data-i18n="stats.legendHot">상위 10% (핫)</span></span>
+        <span class="legend-item"><i class="lg lg-cold"></i><span data-i18n="stats.legendCold">하위 10% (콜드)</span></span>
+        <span class="legend-item"><i class="lg lg-mid"></i><span data-i18n="stats.legendMid">평균 구간</span></span>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-head">
+          <h3><span class="flame">🔥</span> <span data-i18n="stats.hotTitle">HOT 10</span></h3>
+          <span class="card-sub" data-i18n="stats.hotSub">가장 많이 나온 번호</span>
+        </div>
+        <ol class="rank-list" id="hotList"></ol>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <h3><span class="ice">🧊</span> <span data-i18n="stats.coldTitle">COLD 10</span></h3>
+          <span class="card-sub" data-i18n="stats.coldSub">가장 적게 나온 번호</span>
+        </div>
+        <ol class="rank-list" id="coldList"></ol>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h3 data-i18n="stats.overdueTitle">오버듀 — 최근 미출현 순위</h3>
+        <span class="card-sub" data-i18n="stats.overdueSub">마지막 출현 이후 지난 회차</span>
+      </div>
+      <div class="overdue-grid" id="overdueList"></div>
+    </div>
+
+    <div class="three-col">
+      <div class="card">
+        <div class="card-head"><h3 data-i18n="stats.oddEven">홀짝 분포</h3></div>
+        <div class="dist" id="oddEvenDist"></div>
+        <p class="dist-note" data-i18n="stats.oddEvenNote">회차별 홀수 개수 분포</p>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3 data-i18n="stats.lowHigh">고저 분포</h3></div>
+        <div class="dist" id="lowHighDist"></div>
+        <p class="dist-note" id="lowHighNote">회차별 저구간(1~22) 개수 분포</p>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3 data-i18n="stats.sumDist">총합 분포</h3></div>
+        <div class="dist" id="sumDist"></div>
+        <p class="dist-note" id="sumNote">당첨 번호 6개 총합</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h3 data-i18n="stats.recent">최근 회차</h3>
+        <span class="card-sub" data-i18n="stats.recentSub">최신 10회</span>
+      </div>
+      <div class="table-wrap">
+        <table class="draw-table">
+          <thead>
+            <tr>
+              <th data-i18n="stats.colDraw">회차</th>
+              <th data-i18n="stats.colDate">추첨일</th>
+              <th data-i18n="stats.colMain">당첨번호</th>
+              <th id="colExtra">보너스</th>
+            </tr>
+          </thead>
+          <tbody id="recentBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── generate ─────────────────────────────────────────── -->
+  <section class="panel" id="panel-generate" role="tabpanel">
+    <div class="panel-head">
+      <h2 data-i18n="gen.title">번호 추천</h2>
+      <p data-i18n="gen.desc">통계 가중치로 조합을 만들고, 실제 용지처럼 OMR 마킹 슬립으로 확인합니다.</p>
+    </div>
+
+    <div class="free-box">
+      <div class="free-box-head">
+        <span class="badge-free" data-i18n="gen.freeBadge">무료</span>
+        <span class="free-left" id="freeLeft"></span>
+      </div>
+      <div class="free-actions">
+        <button class="btn btn-primary btn-lg" id="btnFreeGenerate" type="button">
+          <span aria-hidden="true">🎲</span>
+          <span data-i18n="gen.freeButton">기본 추천 받기 (2게임)</span>
+        </button>
+        <button class="btn btn-ghost" id="btnProTen" type="button" data-open-modal>
+          <span aria-hidden="true">🔒</span>
+          <span data-i18n="gen.proTen">PRO · 10게임 일괄 + CSV</span>
+        </button>
+      </div>
+      <p class="hint" data-i18n="gen.freeHint">무료 추천은 하루 1회, 2게임까지 제공됩니다.</p>
+    </div>
+
+    <div class="card" id="freeResultCard" hidden>
+      <div class="card-head">
+        <h3 id="resultTitle" data-i18n="gen.gamesTitle">추천 번호</h3>
+        <div class="card-actions">
+          <button class="btn btn-mini" id="btnCopy" type="button" data-i18n="common.copy">복사</button>
+          <button class="btn btn-mini" id="btnCsvFree" type="button" data-i18n="common.csv">CSV</button>
+        </div>
+      </div>
+      <div id="gameCards" class="game-cards"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h3 data-i18n="gen.omrTitle">OMR 마킹 슬립 미리보기</h3>
+        <span class="card-sub" data-i18n="gen.omrNote">실제 구매 용지가 아닌 화면 미리보기입니다.</span>
+      </div>
+      <div id="omrWrap" class="omr-wrap"></div>
+      <p class="hint" id="omrHint" data-i18n="gen.omrEmpty">번호를 생성하면 여기에 마킹 슬립이 표시됩니다.</p>
+    </div>
+  </section>
+
+  <!-- ── pro filters ──────────────────────────────────────── -->
+  <section class="panel" id="panel-pro" role="tabpanel">
+    <div class="panel-head">
+      <h2><span data-i18n="pro.title">정밀 조건 필터</span> <span class="badge-pro">PRO</span></h2>
+      <p data-i18n="pro.desc">핫/콜드 가중치, 홀짝, 총합 구간, 연속수, 고정수·제외수를 조합해 조건에 맞는 조합만 생성합니다.</p>
+    </div>
+
+    <div class="pro-gated" id="proGateWrap">
+      <div class="gate" id="proGate" hidden>
+        <div class="gate-card">
+          <span class="gate-icon" aria-hidden="true">🔒</span>
+          <h3 data-i18n="pro.lockTitle">PRO 기능입니다</h3>
+          <p data-i18n="pro.lockDesc">정밀 필터와 백테스트는 라이선스 코드로 해금됩니다.</p>
+          <button class="btn btn-primary" type="button" data-open-modal data-i18n="common.unlockPro">PRO 해금하기</button>
+        </div>
+      </div>
+
+      <div class="filter-grid">
+        <div class="card filter-card">
+          <h3 data-i18n="pro.weightTitle">번호 가중치</h3>
+          <div class="field">
+            <div class="field-row"><label for="hotWeight" data-i18n="pro.hotWeight">핫 번호 가중치</label><output id="hotOut">35</output></div>
+            <input type="range" id="hotWeight" min="0" max="100" value="35">
+          </div>
+          <div class="field">
+            <div class="field-row"><label for="coldWeight" data-i18n="pro.coldWeight">콜드 번호 가중치</label><output id="coldOut">15</output></div>
+            <input type="range" id="coldWeight" min="0" max="100" value="15">
+          </div>
+          <p class="hint" data-i18n="pro.weightHint">0이면 균등 추첨, 높을수록 통계 빈도에 치우칩니다.</p>
+        </div>
+
+        <div class="card filter-card">
+          <h3 data-i18n="pro.shapeTitle">조합 형태</h3>
+          <div class="field">
+            <label for="oddEven" data-i18n="pro.oddEven">홀짝 비율</label>
+            <select id="oddEven">
+              <option value="any" data-i18n="pro.oddEvenAny">제한 없음</option>
+              <option value="3:3">3 : 3</option>
+              <option value="4:2">4 : 2</option>
+              <option value="2:4">2 : 4</option>
+              <option value="5:1">5 : 1</option>
+              <option value="1:5">1 : 5</option>
+              <option value="6:0">6 : 0</option>
+              <option value="0:6">0 : 6</option>
+            </select>
+          </div>
+          <div class="field">
+            <label data-i18n="pro.sumRange">총합 구간</label>
+            <div class="range-row">
+              <input type="number" id="sumMin" value="" min="0" max="500" inputmode="numeric" aria-label="sum min">
+              <span>~</span>
+              <input type="number" id="sumMax" value="" min="0" max="500" inputmode="numeric" aria-label="sum max">
+            </div>
+          </div>
+          <label class="switch-row">
+            <input type="checkbox" id="noConsecutive" checked>
+            <span class="switch"></span>
+            <span data-i18n="pro.consecutive">연속번호 제외</span>
+          </label>
+        </div>
+
+        <div class="card filter-card">
+          <h3 data-i18n="pro.pickTitle">고정수 / 제외수</h3>
+          <div class="pick-head">
+            <span class="pick-label"><i class="pi pi-fixed"></i><span data-i18n="pro.fixed">고정수</span></span>
+            <span class="pick-count" id="fixedCount">0</span>
+          </div>
+          <div class="pick-grid" id="fixedGrid" data-pick="fixed"></div>
+          <div class="pick-head">
+            <span class="pick-label"><i class="pi pi-excluded"></i><span data-i18n="pro.excluded">제외수</span></span>
+            <span class="pick-count" id="excludedCount">0</span>
+          </div>
+          <div class="pick-grid" id="excludedGrid" data-pick="excluded"></div>
+          <p class="hint" data-i18n="pro.pickHint">고정수는 반드시 포함, 제외수는 절대 포함하지 않습니다.</p>
+        </div>
+      </div>
+
+      <div class="pro-actions">
+        <label class="games-select">
+          <span data-i18n="pro.games">게임 수</span>
+          <select id="proGameCount">
+            <option>1</option><option>2</option><option>3</option><option>5</option>
+            <option selected>10</option>
+          </select>
+        </label>
+        <button class="btn btn-primary btn-lg" id="btnProGenerate" type="button">
+          <span aria-hidden="true">⚙️</span><span data-i18n="pro.run">조건으로 번호 생성</span>
+        </button>
+        <button class="btn btn-ghost" id="btnResetFilters" type="button" data-i18n="pro.reset">조건 초기화</button>
+      </div>
+
+      <div class="card" id="proResultCard" hidden>
+        <div class="card-head">
+          <h3 id="proResultTitle" data-i18n="pro.resultTitle">생성 결과</h3>
+          <div class="card-actions">
+            <button class="btn btn-mini" id="btnCopyPro" type="button" data-i18n="common.copy">복사</button>
+            <button class="btn btn-mini" id="btnCsvPro" type="button" data-i18n="common.csv">CSV</button>
+          </div>
+        </div>
+        <p class="filter-summary" id="filterSummary"></p>
+        <div id="proGameCards" class="game-cards"></div>
+        <div id="proOmr" class="omr-wrap"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── backtest ─────────────────────────────────────────── -->
+  <section class="panel" id="panel-backtest" role="tabpanel">
+    <div class="panel-head">
+      <h2><span data-i18n="bt.title">과거 회차 백테스트</span> <span class="badge-pro">PRO</span></h2>
+      <p data-i18n="bt.desc">현재 필터 조건으로 과거 회차를 하나씩 재현해 적중 분포를 계산합니다. 각 회차는 그 시점 이전 데이터만 사용합니다(워크포워드).</p>
+    </div>
+
+    <div class="pro-gated" id="btGateWrap">
+      <div class="gate" id="btGate" hidden>
+        <div class="gate-card">
+          <span class="gate-icon" aria-hidden="true">🔒</span>
+          <h3 data-i18n="bt.lockTitle">PRO 기능입니다</h3>
+          <p data-i18n="bt.lockDesc">과거 전체 회차 시뮬레이션은 라이선스 해금 후 사용할 수 있습니다.</p>
+          <button class="btn btn-primary" type="button" data-open-modal data-i18n="common.unlockPro">PRO 해금하기</button>
+        </div>
+      </div>
+
+      <div class="bt-controls card">
+        <div class="bt-field">
+          <label for="btScope" data-i18n="bt.scope">분석 범위</label>
+          <select id="btScope">
+            <option value="100">100</option>
+            <option value="300" selected>300</option>
+            <option value="all"></option>
+          </select>
+        </div>
+        <div class="bt-field">
+          <label for="btGames" data-i18n="bt.gamesPerDraw">회차당 게임 수</label>
+          <select id="btGames">
+            <option>1</option><option>3</option><option selected>5</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" id="btnBacktest" type="button">
+          <span aria-hidden="true">🧪</span><span data-i18n="bt.run">백테스트 실행</span>
+        </button>
+      </div>
+
+      <div class="card" id="btResultCard" hidden>
+        <div class="card-head">
+          <h3 data-i18n="bt.summary">요약</h3>
+          <span class="card-sub" id="btScopeLabel"></span>
+        </div>
+        <div class="kpi-grid kpi-grid-4">
+          <div class="kpi"><span class="kpi-label" data-i18n="bt.testedGames">검증 게임 수</span><strong class="kpi-value" id="btGamesCount">-</strong></div>
+          <div class="kpi"><span class="kpi-label" data-i18n="bt.hitRate">3개 이상 적중률</span><strong class="kpi-value" id="btHitRate">-</strong></div>
+          <div class="kpi"><span class="kpi-label" data-i18n="bt.baseline">이론 확률</span><strong class="kpi-value" id="btBaseline">-</strong></div>
+          <div class="kpi"><span class="kpi-label" data-i18n="bt.delta">이론 대비</span><strong class="kpi-value" id="btDelta">-</strong></div>
+        </div>
+        <div class="card-head mt">
+          <h3 data-i18n="bt.distribution">일치 개수 분포</h3>
+        </div>
+        <div class="dist dist-wide" id="btDist"></div>
+        <p class="hint" data-i18n="bt.note">백테스트는 생성된 조합을 과거 결과와 비교한 통계일 뿐이며, 미래 당첨을 보장하지 않습니다. 복권 추첨은 매 회차 독립입니다.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <span class="brand-mark" aria-hidden="true">◍</span>
+      <span>LottoLab Global</span>
+      <span class="footer-ver">v1.0</span>
+    </div>
+    <div class="footer-sources" id="footerSources"></div>
+  </div>
+  <p class="footer-disclaimer" data-i18n="footer.disclaimer">과거 공개 추첨 통계 참고 도구이며, 당첨을 예측하거나 보장하지 않습니다.</p>
+  <p class="footer-legal" data-i18n="footer.legal">본 서비스는 복권의 구매·판매·중개를 하지 않으며, 각 복권 운영 기관과 무관한 독립 통계 도구입니다. 만 19세 미만은 이용할 수 없습니다. 도박 문제로 어려움이 있다면 전문 상담 기관의 도움을 받으세요.</p>
+  <p class="footer-copy">© 2026 LottoLab Global · Statistics reference only.</p>
+</footer>
+
+<!-- toast -->
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<!-- upgrade modal -->
+<div class="modal" id="proModal" hidden>
+  <div class="modal-backdrop" data-close-modal></div>
+  <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" type="button" data-close-modal aria-label="Close">×</button>
+    <div class="modal-body">
+      <span class="modal-icon" aria-hidden="true">🔓</span>
+      <h2 id="modalTitle" data-i18n="modal.title">PRO 잠금 해제</h2>
+      <p class="modal-sub" data-i18n="modal.subtitle">정밀 필터·백테스트·10게임 일괄 생성을 모두 사용할 수 있습니다.</p>
+
+      <ul class="modal-features">
+        <li><span aria-hidden="true">🎛️</span><span data-i18n="modal.f1">핫/콜드 가중치·홀짝·총합·연속수·고정수/제외수 필터</span></li>
+        <li><span aria-hidden="true">🧪</span><span data-i18n="modal.f2">과거 회차 전체 백테스트 시뮬레이터</span></li>
+        <li><span aria-hidden="true">📄</span><span data-i18n="modal.f3">10게임 일괄 생성 + CSV 내보내기</span></li>
+      </ul>
+
+      <a class="btn btn-buy" id="buyBtn" href="#" target="_blank" rel="noopener">
+        <span aria-hidden="true">🛒</span>
+        <span data-i18n="modal.buy">래피드에서 PRO 구매</span>
+      </a>
+      <p class="modal-buy-note" data-i18n="modal.buyNote">결제 후 발급되는 라이선스 코드를 아래에 입력하세요.</p>
+
+      <form class="code-form" id="codeForm" novalidate>
+        <label for="codeInput" data-i18n="modal.codeLabel">라이선스 코드</label>
+        <div class="code-row">
+          <input id="codeInput" type="text" autocomplete="off" spellcheck="false" placeholder="LOTTOLAB-XXXX-XXXX">
+          <button class="btn btn-primary" type="submit" data-i18n="modal.activate">인증</button>
+        </div>
+        <p class="code-error" id="codeError" role="alert" hidden></p>
+      </form>
+
+      <div class="trial-box">
+        <span class="trial-label" data-i18n="modal.trialLabel">체험 코드</span>
+        <code id="trialCode">LOTTOLAB-TRIAL-2026</code>
+        <button class="btn btn-mini" id="btnFillTrial" type="button" data-i18n="modal.trialFill">입력</button>
+        <span class="trial-note" data-i18n="modal.trialNote">7일 체험 · 1회 등록</span>
+      </div>
+
+      <p class="license-state" id="licenseState" hidden></p>
+      <p class="modal-foot" data-i18n="modal.foot">코드는 이 브라우저에만 저장되며 서버로 전송되지 않습니다. 구매·환불은 래피드 정책을 따릅니다.</p>
+    </div>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/games.js"></script>
+<script src="js/stats.js"></script>
+<script src="js/generator.js"></script>
+<script src="js/backtest.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
